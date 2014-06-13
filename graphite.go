@@ -41,6 +41,19 @@ func GraphiteWithConfig(c GraphiteConfig) {
 	}
 }
 
+// GraphiteOnce is a one time export function just like Graphite,
+// but it returns right after exporting all data to the graphite server.
+func GraphiteOnce(r Registry, prefix string, addr *net.TCPAddr) error {
+	err := graphite(&GraphiteConfig{
+		Addr:          addr,
+		Registry:      r,
+		FlushInterval: 0,
+		DurationUnit:  time.Nanosecond,
+		Prefix:        prefix,
+	})
+	return err
+}
+
 func graphite(c *GraphiteConfig) error {
 	now := time.Now().Unix()
 	du := float64(c.DurationUnit)
